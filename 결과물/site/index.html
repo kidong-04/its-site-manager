@@ -1,0 +1,1108 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>단속설비 공사 현장관리</title>
+<style>
+  :root{
+    --bg:#f4f6f8; --card:#fff; --ink:#1c2430; --sub:#5b6675; --line:#dfe3e8;
+    --brand:#0b4ea2; --brand-soft:#e7effa;
+    --ok:#1f8a4c; --ok-soft:#e5f4ec; --bad:#c62828; --bad-soft:#fdeaea;
+    --warn:#b26a00; --warn-soft:#fff3e0;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif}
+  header{background:var(--brand);color:#fff;padding:12px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+  header h1{font-size:17px;margin:0;font-weight:700}
+  header .date{opacity:.85;font-size:13px}
+  nav{display:flex;gap:4px;margin-left:auto}
+  nav button{background:transparent;border:0;color:#fff;opacity:.75;padding:8px 12px;border-radius:6px;font:inherit;cursor:pointer}
+  nav button.on{opacity:1;background:rgba(255,255,255,.18);font-weight:700}
+  main{max-width:1180px;margin:0 auto;padding:20px 16px 60px}
+  section{display:none} section.on{display:block}
+  h2{font-size:16px;margin:0 0 12px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
+  .grid{display:grid;gap:14px}
+  .kpis{grid-template-columns:repeat(4,1fr);margin-bottom:14px}
+  .kpi .n{font-size:28px;font-weight:700;font-variant-numeric:tabular-nums}
+  .kpi .l{color:var(--sub);font-size:13px}
+  .kpi.bad .n{color:var(--bad)}
+  .two{grid-template-columns:1.1fr 1fr;align-items:start}
+  .proj{padding:10px 0;border-top:1px solid var(--line)} .proj:first-of-type{border-top:0}
+  .proj .top{display:flex;justify-content:space-between;gap:8px}
+  .proj .nm{font-weight:700}
+  .proj .meta{color:var(--sub);font-size:13px}
+  .bar{height:10px;background:#e9edf1;border-radius:5px;overflow:hidden;margin:6px 0 4px}
+  .bar i{display:block;height:100%;background:var(--brand)}
+  .pct{font-weight:700;font-variant-numeric:tabular-nums}
+  .sites{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
+  .sites span{font-size:11px;padding:1px 6px;border-radius:4px;background:#eef1f4;color:var(--sub)}
+  .sites span.d{background:var(--brand-soft);color:var(--brand)}
+  .work{border:1px solid var(--line);border-left:4px solid var(--ok);border-radius:8px;padding:10px 12px;margin-bottom:10px;cursor:pointer}
+  .work.bad{border-left-color:var(--bad)}
+  .work .row{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+  .work .t{font-weight:700}
+  .muted{color:var(--sub);font-size:13px}
+  .tag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:10px;font-weight:700;white-space:nowrap}
+  .tag.ok{background:var(--ok-soft);color:var(--ok)} .tag.bad{background:var(--bad-soft);color:var(--bad)}
+  .tag.run{background:var(--warn-soft);color:var(--warn)} .tag.end{background:#eef1f4;color:var(--sub)}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--sub);font-weight:600;font-size:13px;white-space:nowrap}
+  tbody tr{cursor:pointer} tbody tr:hover{background:#f7f9fb}
+  .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+  .filters select,.filters input{flex:1 1 150px;min-width:0}
+  select,input,textarea{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--ink);max-width:100%}
+  label.f{display:block;margin-bottom:12px} label.f>span{display:block;font-size:13px;color:var(--sub);margin-bottom:4px}
+  label.f input,label.f select,label.f textarea{width:100%}
+  .form{max-width:520px;margin:0 auto}
+  .seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:14px}
+  .seg button{flex:1;border:0;background:#fff;padding:10px;font:inherit;cursor:pointer}
+  .seg button.on{background:var(--brand);color:#fff;font-weight:700}
+  .chk{display:flex;gap:10px;align-items:flex-start;padding:10px;border:1px solid var(--line);border-radius:8px;margin-bottom:8px}
+  .chk input{width:20px;height:20px;margin-top:1px}
+  .chk.na{opacity:.45}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .btn{display:block;width:100%;padding:12px;border:0;border-radius:8px;background:var(--brand);color:#fff;font:inherit;font-weight:700;cursor:pointer}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#1c2430;color:#fff;padding:10px 16px;border-radius:8px;display:none}
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center;padding:16px}
+  .modal.on{display:flex}
+  .modal .card{max-width:560px;width:100%;max-height:90vh;overflow:auto}
+  .photos{display:flex;gap:8px;flex-wrap:wrap}
+  .ph{width:120px;height:80px;border-radius:6px;background:repeating-linear-gradient(45deg,#e9edf1,#e9edf1 8px,#f4f6f8 8px,#f4f6f8 16px);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--sub);text-align:center;padding:4px}
+  ul.cl{list-style:none;padding:0;margin:0} ul.cl li{padding:4px 0}
+  .x{float:right;background:none;border:0;font-size:22px;cursor:pointer;color:var(--sub)}
+  .loc{margin-bottom:14px;border-top:4px solid var(--brand)}
+  .loc .tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+  .tile{border:1px solid var(--line);border-left:6px solid var(--ok);border-radius:10px;padding:12px 14px;background:#fbfcfd}
+  .tile.bad{border-left-color:var(--bad);background:#fffafa}
+  .tile .of{font-size:22px;font-weight:800;letter-spacing:-.5px;display:flex;align-items:center;gap:6px}
+  .tile .of svg{flex:none;color:var(--brand)}
+  .tile .w{padding:6px 0;border-top:1px dashed var(--line);margin-top:6px;cursor:pointer}
+  .tile .w:first-of-type{border-top:0}
+  .tile .w b{font-size:15px}
+  .otag{display:inline-block;font-size:12px;font-weight:700;color:var(--brand);background:var(--brand-soft);padding:1px 8px;border-radius:10px;margin-right:4px;white-space:nowrap}
+  @media (max-width:820px){ .kpis{grid-template-columns:repeat(2,1fr)} .two{grid-template-columns:1fr} nav{margin-left:0;width:100%} nav button{flex:1;padding:8px 2px;font-size:14px;white-space:nowrap}
+    header h1{font-size:15px}
+    .hide-m{display:none} }
+</style>
+</head>
+<body>
+<header>
+  <h1>ETC·제한차량 단속설비 공사 현장관리</h1>
+  <span class="date" id="today"></span>
+  <nav>
+    <button data-tab="dash" class="on">대시보드</button>
+    <button data-tab="report">작업 보고</button>
+    <button data-tab="history">작업 이력</button>
+    <button data-tab="projects">사업 관리</button>
+  </nav>
+</header>
+
+<main>
+  <!-- ① 대시보드 -->
+  <section id="dash" class="on">
+    <div class="card loc">
+      <h2>오늘 작업 위치 <span class="muted" id="locSum"></span></h2>
+      <div class="tiles" id="locTiles"></div>
+    </div>
+    <div class="grid kpis">
+      <div class="card kpi"><div class="n" id="k1"></div><div class="l">진행 중인 사업</div></div>
+      <div class="card kpi"><div class="n" id="k2"></div><div class="l">오늘 작업</div></div>
+      <div class="card kpi bad"><div class="n" id="k3"></div><div class="l">미준수 (최근 7일)</div></div>
+      <div class="card kpi"><div class="n" id="k4"></div><div class="l">감독 미확인 보고</div></div>
+    </div>
+    <div class="grid two">
+      <div class="card"><h2>사업별 공정률</h2><div id="projList"></div></div>
+      <div class="grid">
+        <div class="card"><h2>오늘 작업</h2><div id="todayList"></div></div>
+        <div class="card"><h2>최근 미준수</h2><div id="badList"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ② 작업 보고 입력 -->
+  <section id="report">
+    <div class="form">
+      <div class="seg"><button data-mode="start" class="on">작업 시작 보고</button><button data-mode="end">작업 종료 보고</button></div>
+
+      <form id="startForm" class="card">
+        <label class="f"><span>사업</span><select id="fProj"></select></label>
+        <label class="f"><span>작업 개소(차로)</span><select id="fSite"></select></label>
+        <label class="f"><span>작업 내용</span><input id="fContent" required placeholder="예: 차로제어기 교체"></label>
+        <div class="row2">
+          <label class="f"><span>작업 구분</span><select id="fShift"><option>주간</option><option>야간</option></select></label>
+          <label class="f"><span>시작 시간</span><input id="fStart" type="time" required></label>
+        </div>
+        <div class="row2">
+          <label class="f"><span>시공사</span><input id="fContractor" readonly></label>
+          <label class="f"><span>현장 담당자</span><input id="fManager" required placeholder="이름"></label>
+        </div>
+        <label class="chk"><input type="checkbox" id="fLane"><span>차로 차단 작업</span></label>
+        <label class="f"><span>현장사진</span><input id="fPhoto" type="file" accept="image/*" multiple></label>
+        <label class="f"><span>TBM일지 <b style="color:var(--bad)">(첨부해야 TBM 항목이 인정됩니다)</b></span><input id="fTbm" type="file"></label>
+        <h2 style="margin-top:16px">현장 준수항목</h2>
+        <div id="fChecks"></div>
+        <button class="btn" type="submit">시작 보고 올리기</button>
+      </form>
+
+      <form id="endForm" class="card" style="display:none">
+        <label class="f"><span>진행 중인 작업</span><select id="eWork"></select></label>
+        <label class="f"><span>종료 시간</span><input id="eEnd" type="time" required></label>
+        <label class="f"><span>완료 사진</span><input type="file" accept="image/*" multiple id="ePhoto"></label>
+        <label class="chk"><input type="checkbox" id="eDone"><span><b>이 개소 공사 완료</b><br><span class="muted">체크하면 공정률에 반영됩니다</span></span></label>
+        <p class="muted" id="eTimeMsg"></p>
+        <button class="btn" type="submit">종료 보고 올리기</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ③ 작업 이력 -->
+  <section id="history">
+    <div class="card">
+      <div class="filters">
+        <select id="hProj"><option value="">전체 사업</option></select>
+        <select id="hSite"><option value="">전체 개소</option></select>
+        <select id="hCon"><option value="">전체 시공사</option></select>
+        <select id="hOk"><option value="">준수 여부 전체</option><option value="ok">준수</option><option value="bad">미준수</option></select>
+        <input type="date" id="hFrom" title="시작일"><input type="date" id="hTo" title="종료일">
+      </div>
+      <table>
+        <thead><tr><th>일자</th><th>사업 / 개소</th><th class="hide-m">작업 내용</th><th class="hide-m">시간</th><th class="hide-m">시공사</th><th>준수</th><th class="hide-m">확인</th></tr></thead>
+        <tbody id="hBody"></tbody>
+      </table>
+      <p class="muted" id="hCount"></p>
+    </div>
+  </section>
+
+  <!-- ④ 사업 관리 -->
+  <section id="projects">
+    <div class="grid two">
+      <div class="card">
+        <h2>등록된 사업</h2>
+        <table>
+          <thead><tr><th>사업명</th><th class="hide-m">업체명</th><th class="hide-m">계약기간</th><th>담당자</th><th>공정률</th></tr></thead>
+          <tbody id="pBody"></tbody>
+        </table>
+        <p class="muted">사업을 누르면 수정 화면에 불러옵니다.</p>
+      </div>
+      <form id="projForm" class="card">
+        <h2 id="pfTitle">새 사업 등록</h2>
+        <label class="f"><span>사업명</span><input id="pfName" required placeholder="예: ○○TG ETC 차로설비 교체"></label>
+        <label class="f"><span>업체명</span><input id="pfCon" required placeholder="예: (주)○○정보통신"></label>
+        <div class="row2">
+          <label class="f"><span>계약 시작일</span><input id="pfStart" type="date" required></label>
+          <label class="f"><span>계약 종료일</span><input id="pfEnd" type="date" required></label>
+        </div>
+        <div class="row2">
+          <label class="f"><span>담당자</span><input id="pfMgr" required placeholder="이름"></label>
+          <label class="f"><span>담당자 연락처</span><input id="pfTel" type="tel" required placeholder="010-0000-0000"></label>
+        </div>
+        <label class="f"><span>영업소 (작업 위치)</span><input id="pfOffice" required placeholder="예: ○○영업소"></label>
+        <label class="f"><span>작업 개소 (한 줄에 하나씩, 공정률 계산 기준)</span>
+          <textarea id="pfSites" rows="5" required placeholder="입구 1번 차로&#10;입구 2번 차로&#10;상행 12.4k / ○○영업소"></textarea>
+          <span class="muted" style="margin-top:4px">개소마다 영업소가 다르면 <b>개소명 / 영업소</b>로 적습니다. 안 적으면 위 영업소로 들어갑니다.</span></label>
+        <button class="btn" type="submit" id="pfBtn">사업 등록</button>
+        <p style="text-align:center;margin:10px 0 0"><a href="#" id="pfNew" style="display:none">새 사업 등록으로 돌아가기</a></p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<div class="modal" id="modal"><div class="card" id="modalBody"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+// 더미 데이터 (dummy_data.json과 같은 내용)
+window.DATA = {
+  "_note": "화면 개발용 가상 데이터. 영업소·TG명은 경부선 실제 명칭을 썼으나, 업체명·담당자·연락처·개소 위치(km)는 모두 가상이며 실제 정보로 바꿔야 함. 기준일 2026-11-11.",
+  "today": "2026-11-11",
+  "checklistItems": [
+    {
+      "key": "tbm",
+      "label": "TBM 실시 및 TBM일지 첨부",
+      "appliesTo": "전체"
+    },
+    {
+      "key": "signs",
+      "label": "작업장 표지 설치(주의 → 완화 → 작업 구간)",
+      "appliesTo": "전체"
+    },
+    {
+      "key": "flagger",
+      "label": "신호수 2명 이상 배치",
+      "appliesTo": "차로 차단 작업"
+    },
+    {
+      "key": "timeOk",
+      "label": "허용 시간 내 작업(주간 09:00~17:00 / 야간 22:00~06:00)",
+      "appliesTo": "전체(자동 판정)"
+    },
+    {
+      "key": "nightGear",
+      "label": "경광등·화살표 차량, 반사 조끼",
+      "appliesTo": "야간 작업"
+    }
+  ],
+  "projects": [
+    {
+      "id": "P1",
+      "name": "수원신갈TG ETC 차로설비 교체",
+      "office": "수원신갈영업소",
+      "category": "교체",
+      "equipment": "ETC",
+      "contractor": "(주)한빛ITS",
+      "contactName": "현장대리인 김○○",
+      "contactPhone": "010-0000-0001",
+      "supervisorFirm": "(주)세움감리",
+      "kecManager": "도공감독 A",
+      "period": {
+        "start": "2026-10-13",
+        "end": "2026-11-30"
+      },
+      "sites": [
+        {
+          "id": "P1-L1",
+          "name": "입구 1번 차로",
+          "done": true,
+          "completedDate": "2026-10-20"
+        },
+        {
+          "id": "P1-L2",
+          "name": "입구 2번 차로",
+          "done": true,
+          "completedDate": "2026-10-27"
+        },
+        {
+          "id": "P1-L3",
+          "name": "출구 3번 차로",
+          "done": true,
+          "completedDate": "2026-11-03"
+        },
+        {
+          "id": "P1-L4",
+          "name": "출구 4번 차로",
+          "done": true,
+          "completedDate": "2026-11-05"
+        },
+        {
+          "id": "P1-L5",
+          "name": "출구 5번 차로",
+          "done": false,
+          "completedDate": null
+        },
+        {
+          "id": "P1-L6",
+          "name": "출구 6번 차로",
+          "done": false,
+          "completedDate": null
+        }
+      ]
+    },
+    {
+      "id": "P2",
+      "name": "경부선 제한차량 단속설비 신설",
+      "office": "오산영업소",
+      "category": "신설",
+      "equipment": "제한차량 단속설비",
+      "contractor": "(주)미래시스템",
+      "contactName": "현장대리인 이○○",
+      "contactPhone": "010-0000-0002",
+      "supervisorFirm": "(주)세움감리",
+      "kecManager": "도공감독 B",
+      "period": {
+        "start": "2026-10-27",
+        "end": "2026-12-18"
+      },
+      "sites": [
+        {
+          "id": "P2-S1",
+          "name": "상행 12.4k",
+          "done": true,
+          "completedDate": "2026-11-04"
+        },
+        {
+          "id": "P2-S2",
+          "name": "하행 15.8k",
+          "done": true,
+          "completedDate": "2026-11-06"
+        },
+        {
+          "id": "P2-S3",
+          "name": "상행 21.0k",
+          "done": false,
+          "completedDate": null,
+          "office": "안성영업소"
+        },
+        {
+          "id": "P2-S4",
+          "name": "하행 26.3k",
+          "done": false,
+          "completedDate": null,
+          "office": "안성영업소"
+        },
+        {
+          "id": "P2-S5",
+          "name": "상행 30.7k",
+          "done": false,
+          "completedDate": null,
+          "office": "안성영업소"
+        }
+      ]
+    },
+    {
+      "id": "P3",
+      "name": "기흥TG 하이패스 차로 교체",
+      "office": "기흥영업소",
+      "category": "교체",
+      "equipment": "ETC",
+      "contractor": "(주)대한통신",
+      "contactName": "현장대리인 박○○",
+      "contactPhone": "010-0000-0003",
+      "supervisorFirm": "(주)바른감리",
+      "kecManager": "도공감독 A",
+      "period": {
+        "start": "2026-11-02",
+        "end": "2026-12-11"
+      },
+      "sites": [
+        {
+          "id": "P3-H1",
+          "name": "입구 1번 차로",
+          "done": true,
+          "completedDate": "2026-11-05"
+        },
+        {
+          "id": "P3-H2",
+          "name": "입구 2번 차로",
+          "done": false,
+          "completedDate": null
+        },
+        {
+          "id": "P3-H3",
+          "name": "출구 1번 차로",
+          "done": false,
+          "completedDate": null
+        },
+        {
+          "id": "P3-H4",
+          "name": "출구 2번 차로",
+          "done": false,
+          "completedDate": null
+        }
+      ]
+    },
+    {
+      "id": "P4",
+      "name": "경부선 제한차량 단속설비 교체",
+      "office": "서울영업소",
+      "category": "교체",
+      "equipment": "제한차량 단속설비",
+      "contractor": "(주)한빛ITS",
+      "contactName": "현장대리인 최○○",
+      "contactPhone": "010-0000-0004",
+      "supervisorFirm": "(주)바른감리",
+      "kecManager": "도공감독 B",
+      "period": {
+        "start": "2026-11-06",
+        "end": "2026-12-24"
+      },
+      "sites": [
+        {
+          "id": "P4-Y1",
+          "name": "상행 8.2k",
+          "done": false,
+          "completedDate": null
+        },
+        {
+          "id": "P4-Y2",
+          "name": "하행 11.5k",
+          "done": false,
+          "completedDate": null
+        },
+        {
+          "id": "P4-Y3",
+          "name": "상행 19.9k",
+          "done": false,
+          "completedDate": null
+        },
+        {
+          "id": "P4-Y4",
+          "name": "하행 23.6k",
+          "done": false,
+          "completedDate": null
+        }
+      ]
+    }
+  ],
+  "reports": [
+    {
+      "id": "R01",
+      "projectId": "P1",
+      "siteId": "P1-L3",
+      "date": "2026-11-03",
+      "shift": "주간",
+      "content": "차로제어기·안테나 철거 후 신규 설비 설치 및 시험",
+      "laneClosure": true,
+      "start": "09:10",
+      "end": "16:30",
+      "status": "종료",
+      "contractor": "(주)한빛ITS",
+      "manager": "현장담당 김○○",
+      "photos": [
+        "R01_start.jpg",
+        "R01_end.jpg"
+      ],
+      "tbmFile": "R01_TBM.pdf",
+      "checklist": {
+        "tbm": true,
+        "signs": true,
+        "flagger": true,
+        "timeOk": true,
+        "nightGear": null
+      },
+      "completedSite": true,
+      "confirmed": {
+        "supervisor": true,
+        "kec": true
+      }
+    },
+    {
+      "id": "R02",
+      "projectId": "P2",
+      "siteId": "P2-S1",
+      "date": "2026-11-04",
+      "shift": "야간",
+      "content": "축중기 센서 매설 및 단속 카메라 설치",
+      "laneClosure": true,
+      "start": "22:10",
+      "end": "05:30",
+      "status": "종료",
+      "contractor": "(주)미래시스템",
+      "manager": "현장담당 이○○",
+      "photos": [
+        "R02_start.jpg",
+        "R02_end.jpg"
+      ],
+      "tbmFile": "R02_TBM.pdf",
+      "checklist": {
+        "tbm": true,
+        "signs": true,
+        "flagger": true,
+        "timeOk": true,
+        "nightGear": true
+      },
+      "completedSite": true,
+      "confirmed": {
+        "supervisor": true,
+        "kec": true
+      }
+    },
+    {
+      "id": "R03",
+      "projectId": "P1",
+      "siteId": "P1-L4",
+      "date": "2026-11-05",
+      "shift": "주간",
+      "content": "차로제어기·안테나 교체 및 통신 시험",
+      "laneClosure": true,
+      "start": "09:00",
+      "end": "16:50",
+      "status": "종료",
+      "contractor": "(주)한빛ITS",
+      "manager": "현장담당 김○○",
+      "photos": [
+        "R03_start.jpg",
+        "R03_end.jpg"
+      ],
+      "tbmFile": "R03_TBM.pdf",
+      "checklist": {
+        "tbm": true,
+        "signs": true,
+        "flagger": true,
+        "timeOk": true,
+        "nightGear": null
+      },
+      "completedSite": true,
+      "confirmed": {
+        "supervisor": true,
+        "kec": true
+      }
+    },
+    {
+      "id": "R04",
+      "projectId": "P3",
+      "siteId": "P3-H1",
+      "date": "2026-11-05",
+      "shift": "주간",
+      "content": "하이패스 안테나·차로제어기 교체",
+      "laneClosure": true,
+      "start": "09:30",
+      "end": "17:40",
+      "status": "종료",
+      "contractor": "(주)대한통신",
+      "manager": "현장담당 박○○",
+      "photos": [
+        "R04_start.jpg",
+        "R04_end.jpg"
+      ],
+      "tbmFile": "R04_TBM.pdf",
+      "checklist": {
+        "tbm": true,
+        "signs": true,
+        "flagger": true,
+        "timeOk": false,
+        "nightGear": null
+      },
+      "completedSite": true,
+      "confirmed": {
+        "supervisor": true,
+        "kec": true
+      },
+      "remark": "주간 허용시간(17:00) 40분 초과"
+    },
+    {
+      "id": "R05",
+      "projectId": "P2",
+      "siteId": "P2-S2",
+      "date": "2026-11-06",
+      "shift": "야간",
+      "content": "축중기 센서 매설 및 단속 카메라 설치",
+      "laneClosure": true,
+      "start": "22:00",
+      "end": "05:40",
+      "status": "종료",
+      "contractor": "(주)미래시스템",
+      "manager": "현장담당 이○○",
+      "photos": [
+        "R05_start.jpg",
+        "R05_end.jpg"
+      ],
+      "tbmFile": "R05_TBM.pdf",
+      "checklist": {
+        "tbm": true,
+        "signs": true,
+        "flagger": false,
+        "timeOk": true,
+        "nightGear": true
+      },
+      "completedSite": true,
+      "confirmed": {
+        "supervisor": true,
+        "kec": false
+      },
+      "remark": "신호수 1명만 배치"
+    },
+    {
+      "id": "R06",
+      "projectId": "P4",
+      "siteId": "P4-Y1",
+      "date": "2026-11-06",
+      "shift": "주간",
+      "content": "자재 반입 및 기존 설비 상태 점검(갓길 작업)",
+      "laneClosure": false,
+      "start": "09:00",
+      "end": "15:00",
+      "status": "종료",
+      "contractor": "(주)한빛ITS",
+      "manager": "현장담당 최○○",
+      "photos": [
+        "R06_start.jpg",
+        "R06_end.jpg"
+      ],
+      "tbmFile": "R06_TBM.pdf",
+      "checklist": {
+        "tbm": true,
+        "signs": true,
+        "flagger": null,
+        "timeOk": true,
+        "nightGear": null
+      },
+      "completedSite": false,
+      "confirmed": {
+        "supervisor": true,
+        "kec": true
+      }
+    },
+    {
+      "id": "R07",
+      "projectId": "P1",
+      "siteId": "P1-L5",
+      "date": "2026-11-09",
+      "shift": "주간",
+      "content": "기존 차로제어기 철거 및 배선 정리",
+      "laneClosure": true,
+      "start": "09:00",
+      "end": "16:40",
+      "status": "종료",
+      "contractor": "(주)한빛ITS",
+      "manager": "현장담당 김○○",
+      "photos": [
+        "R07_start.jpg",
+        "R07_end.jpg"
+      ],
+      "tbmFile": "R07_TBM.pdf",
+      "checklist": {
+        "tbm": true,
+        "signs": true,
+        "flagger": true,
+        "timeOk": true,
+        "nightGear": null
+      },
+      "completedSite": false,
+      "confirmed": {
+        "supervisor": true,
+        "kec": true
+      }
+    },
+    {
+      "id": "R08",
+      "projectId": "P2",
+      "siteId": "P2-S3",
+      "date": "2026-11-10",
+      "shift": "야간",
+      "content": "축중기 센서 매설(1단계)",
+      "laneClosure": true,
+      "start": "22:00",
+      "end": "05:50",
+      "status": "종료",
+      "contractor": "(주)미래시스템",
+      "manager": "현장담당 정○○",
+      "photos": [
+        "R08_start.jpg",
+        "R08_end.jpg"
+      ],
+      "tbmFile": null,
+      "checklist": {
+        "tbm": false,
+        "signs": true,
+        "flagger": true,
+        "timeOk": true,
+        "nightGear": true
+      },
+      "completedSite": false,
+      "confirmed": {
+        "supervisor": false,
+        "kec": false
+      },
+      "remark": "TBM일지 미첨부"
+    },
+    {
+      "id": "R09",
+      "projectId": "P3",
+      "siteId": "P3-H2",
+      "date": "2026-11-10",
+      "shift": "주간",
+      "content": "기존 안테나 철거 및 지지대 보강",
+      "laneClosure": true,
+      "start": "09:20",
+      "end": "16:30",
+      "status": "종료",
+      "contractor": "(주)대한통신",
+      "manager": "현장담당 박○○",
+      "photos": [
+        "R09_start.jpg",
+        "R09_end.jpg"
+      ],
+      "tbmFile": "R09_TBM.pdf",
+      "checklist": {
+        "tbm": true,
+        "signs": true,
+        "flagger": true,
+        "timeOk": true,
+        "nightGear": null
+      },
+      "completedSite": false,
+      "confirmed": {
+        "supervisor": true,
+        "kec": false
+      }
+    },
+    {
+      "id": "R10",
+      "projectId": "P1",
+      "siteId": "P1-L5",
+      "date": "2026-11-11",
+      "shift": "주간",
+      "content": "신규 차로제어기·안테나 설치",
+      "laneClosure": true,
+      "start": "09:05",
+      "end": null,
+      "status": "진행 중",
+      "contractor": "(주)한빛ITS",
+      "manager": "현장담당 김○○",
+      "photos": [
+        "R10_start.jpg"
+      ],
+      "tbmFile": "R10_TBM.pdf",
+      "checklist": {
+        "tbm": true,
+        "signs": true,
+        "flagger": true,
+        "timeOk": true,
+        "nightGear": null
+      },
+      "completedSite": false,
+      "confirmed": {
+        "supervisor": false,
+        "kec": false
+      }
+    },
+    {
+      "id": "R11",
+      "projectId": "P4",
+      "siteId": "P4-Y1",
+      "date": "2026-11-11",
+      "shift": "주간",
+      "content": "기존 단속 카메라 철거",
+      "laneClosure": true,
+      "start": "09:30",
+      "end": null,
+      "status": "진행 중",
+      "contractor": "(주)한빛ITS",
+      "manager": "현장담당 최○○",
+      "photos": [
+        "R11_start.jpg"
+      ],
+      "tbmFile": "R11_TBM.pdf",
+      "checklist": {
+        "tbm": true,
+        "signs": true,
+        "flagger": false,
+        "timeOk": true,
+        "nightGear": null
+      },
+      "completedSite": false,
+      "confirmed": {
+        "supervisor": false,
+        "kec": false
+      },
+      "remark": "차로 차단 작업인데 신호수 체크 누락"
+    },
+    {
+      "id": "R12",
+      "projectId": "P3",
+      "siteId": "P3-H2",
+      "date": "2026-11-11",
+      "shift": "주간",
+      "content": "신규 하이패스 안테나 설치 및 시험",
+      "laneClosure": true,
+      "start": "09:00",
+      "end": null,
+      "status": "진행 중",
+      "contractor": "(주)대한통신",
+      "manager": "현장담당 박○○",
+      "photos": [
+        "R12_start.jpg"
+      ],
+      "tbmFile": "R12_TBM.pdf",
+      "checklist": {
+        "tbm": true,
+        "signs": true,
+        "flagger": true,
+        "timeOk": true,
+        "nightGear": null
+      },
+      "completedSite": false,
+      "confirmed": {
+        "supervisor": false,
+        "kec": false
+      }
+    }
+  ]
+};
+</script>
+<script>
+const D = window.DATA;
+const KEY = 'its-site-reports-v3';
+// 화면에서 새로 올린 보고는 이 브라우저에만 저장(로그인·서버는 1차 범위 밖)
+try { const saved = JSON.parse(localStorage.getItem(KEY) || 'null'); if (saved) { D.reports = saved.reports; D.projects = saved.projects; } } catch(e) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify({reports:D.reports, projects:D.projects})); } catch(e) {} };
+
+const $ = s => document.querySelector(s);
+const proj = id => D.projects.find(p => p.id === id);
+const site = id => D.projects.flatMap(p => p.sites).find(s => s.id === id) || { name: '(삭제된 개소)' };
+const pct = p => p.sites.length ? Math.round(p.sites.filter(s => s.done).length / p.sites.length * 100) : 0;
+const isBad = r => Object.values(r.checklist).some(v => v === false);
+// 작업 위치(영업소): 개소에 따로 적힌 영업소가 있으면 그것, 없으면 사업의 영업소
+const officeOf = r => site(r.siteId).office || proj(r.projectId).office || '영업소 미지정';
+const PIN = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>';
+const fmtDate = d => { const [y,m,dd] = d.split('-'); return `${y}. ${+m}. ${+dd}.`; };
+const daysAgo = (d, n) => { const t = new Date(D.today); t.setDate(t.getDate() - n); return d >= t.toISOString().slice(0,10); };
+const okTag = r => isBad(r) ? '<span class="tag bad">미준수</span>' : '<span class="tag ok">준수</span>';
+const stTag = r => r.status === '진행 중' ? '<span class="tag run">진행 중</span>' : '<span class="tag end">종료</span>';
+
+// 허용 시간 자동 판정: 주간 09:00~17:00, 야간 22:00~06:00
+function timeOk(shift, start, end) {
+  const m = t => { const [h, mm] = t.split(':').map(Number); return h * 60 + mm; };
+  if (shift === '주간') return m(start) >= 540 && (!end || m(end) <= 1020);
+  const inNight = t => m(t) >= 1320 || m(t) <= 360;
+  return inNight(start) && (!end || inNight(end));
+}
+
+$('#today').textContent = '기준일 ' + fmtDate(D.today);
+
+// 탭
+document.querySelectorAll('nav button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('nav button, section').forEach(x => x.classList.remove('on'));
+  b.classList.add('on'); $('#' + b.dataset.tab).classList.add('on');
+  render();
+});
+
+// ① 대시보드
+function renderDash() {
+  const today = D.reports.filter(r => r.date === D.today);
+  $('#k1').textContent = D.projects.filter(p => pct(p) < 100).length;
+  $('#k2').textContent = today.length;
+  $('#k3').textContent = D.reports.filter(r => daysAgo(r.date, 6) && isBad(r)).length;
+  $('#k4').textContent = D.reports.filter(r => !r.confirmed.kec).length;
+
+  // 오늘 작업 위치: 영업소별로 묶어서 크게 표시
+  const byOffice = {};
+  today.forEach(r => (byOffice[officeOf(r)] ||= []).push(r));
+  const offices = Object.keys(byOffice);
+  $('#locSum').textContent = offices.length ? `· ${offices.length}개 영업소, ${today.length}건` : '';
+  $('#locTiles').innerHTML = offices.length ? offices.map(o => {
+    const rs = byOffice[o];
+    return `<div class="tile ${rs.some(isBad) ? 'bad' : ''}">
+      <div class="of">${PIN}${o}</div>
+      ${rs.map(r => `<div class="w" data-id="${r.id}">
+        <b>${site(r.siteId).name}</b> <span class="muted">${proj(r.projectId).name}</span><br>
+        <span class="muted">${r.shift} ${r.start}~${r.end || ''} · ${r.content}</span><br>
+        <span class="muted">${r.contractor} ${r.manager}</span>
+        <div style="margin-top:4px">${stTag(r)} ${okTag(r)}</div>
+      </div>`).join('')}
+    </div>`;
+  }).join('') : '<p class="muted">오늘 등록된 작업이 없습니다.</p>';
+
+  $('#projList').innerHTML = D.projects.map(p => {
+    const done = p.sites.filter(s => s.done).length;
+    return `<div class="proj">
+      <div class="top"><span class="nm">${p.name}</span><span class="pct">${pct(p)}%</span></div>
+      <div class="bar"><i style="width:${pct(p)}%"></i></div>
+      <div class="meta">${p.contractor} · ${p.contactName} ${p.contactPhone} · 완료 ${done}/${p.sites.length}개소 · ~${fmtDate(p.period.end)}</div>
+      <div class="sites">${p.sites.map(s => `<span class="${s.done ? 'd' : ''}">${s.name}</span>`).join('')}</div>
+    </div>`;
+  }).join('');
+
+  $('#todayList').innerHTML = today.length ? today.map(workCard).join('') : '<p class="muted">오늘 등록된 작업이 없습니다.</p>';
+  const bad = D.reports.filter(r => daysAgo(r.date, 6) && isBad(r)).sort((a,b) => b.date.localeCompare(a.date));
+  $('#badList').innerHTML = bad.length ? bad.map(workCard).join('') : '<p class="muted">최근 7일간 미준수 작업이 없습니다.</p>';
+}
+function workCard(r) {
+  const p = proj(r.projectId), s = site(r.siteId);
+  const miss = D.checklistItems.filter(c => r.checklist[c.key] === false).map(c => c.label.split('(')[0]);
+  return `<div class="work ${isBad(r) ? 'bad' : ''}" data-id="${r.id}">
+    <div class="row"><span class="t"><span class="otag">${officeOf(r)}</span>${p.name} · ${s.name}</span><span>${stTag(r)} ${okTag(r)}</span></div>
+    <div class="muted">${r.date !== D.today ? fmtDate(r.date) + ' ' : ''}${r.shift} ${r.start}~${r.end || ''} · ${r.content} · ${r.contractor} ${r.manager}</div>
+    ${miss.length ? `<div class="muted" style="color:var(--bad)">누락: ${miss.join(', ')}</div>` : ''}
+  </div>`;
+}
+
+// ③ 작업 이력
+function fillFilters() {
+  $('#hProj').innerHTML = '<option value="">전체 사업</option>' + D.projects.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+  const cons = [...new Set(D.projects.map(p => p.contractor))];
+  $('#hCon').innerHTML = '<option value="">전체 시공사</option>' + cons.map(c => `<option>${c}</option>`).join('');
+  fillSiteFilter();
+}
+// 개소 필터: 사업을 고르면 그 사업의 개소만 보여 줌
+function fillSiteFilter() {
+  const fp = $('#hProj').value;
+  const list = D.projects.filter(p => !fp || p.id === fp).flatMap(p => p.sites.map(s =>
+    `<option value="${s.id}">${fp ? '' : p.name + ' · '}${s.name} (${s.office || p.office})</option>`));
+  $('#hSite').innerHTML = '<option value="">전체 개소</option>' + list.join('');
+}
+function renderHistory() {
+  const fp = $('#hProj').value, fs = $('#hSite').value, fc = $('#hCon').value, fo = $('#hOk').value, f1 = $('#hFrom').value, f2 = $('#hTo').value;
+  const rows = D.reports.filter(r =>
+    (!fp || r.projectId === fp) && (!fs || r.siteId === fs) && (!fc || r.contractor === fc) &&
+    (!fo || (fo === 'bad') === isBad(r)) && (!f1 || r.date >= f1) && (!f2 || r.date <= f2)
+  ).sort((a,b) => (b.date + b.start).localeCompare(a.date + a.start));
+  $('#hBody').innerHTML = rows.map(r => `<tr data-id="${r.id}">
+    <td>${fmtDate(r.date)}</td>
+    <td><span class="otag">${officeOf(r)}</span>${proj(r.projectId).name}<br><span class="muted">${site(r.siteId).name}${r.completedSite ? ' · 완료' : ''}</span></td>
+    <td class="hide-m">${r.content}</td>
+    <td class="hide-m">${r.shift} ${r.start}~${r.end || ''}</td>
+    <td class="hide-m">${r.contractor}</td>
+    <td>${okTag(r)}</td>
+    <td class="hide-m">${r.confirmed.supervisor ? '감리 ✓' : '감리 -'} / ${r.confirmed.kec ? '감독 ✓' : '감독 -'}</td>
+  </tr>`).join('');
+  $('#hCount').textContent = `${rows.length}건`;
+}
+['#hSite','#hCon','#hOk','#hFrom','#hTo'].forEach(s => $(s).onchange = renderHistory);
+$('#hProj').onchange = () => { fillSiteFilter(); renderHistory(); };
+
+// 상세 보기
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-id]'); if (!el) return;
+  openDetail(D.reports.find(r => r.id === el.dataset.id));
+});
+function openDetail(r) {
+  const p = proj(r.projectId), s = site(r.siteId);
+  const cl = D.checklistItems.map(c => {
+    const v = r.checklist[c.key];
+    const mark = v === null ? '<span class="muted">해당 없음</span>' : v ? '<span class="tag ok">✓</span>' : '<span class="tag bad">✗</span>';
+    return `<li>${mark} ${c.label}</li>`;
+  }).join('');
+  $('#modalBody').innerHTML = `<button class="x" onclick="closeModal()">×</button>
+    <div class="of" style="font-size:20px;font-weight:800;color:var(--brand);display:flex;align-items:center;gap:6px">${PIN}${officeOf(r)}</div>
+    <h2>${p.name} · ${s.name}</h2>
+    <p class="muted">${fmtDate(r.date)} ${r.shift} ${r.start}~${r.end || '(진행 중)'} · ${r.laneClosure ? '차로 차단' : '차로 차단 없음'}</p>
+    <p>${r.content}<br><span class="muted">${r.contractor} ${r.manager} · 업체 담당 ${p.contactName} ${p.contactPhone}</span></p>
+    ${r.remark ? `<p style="color:var(--bad)">※ ${r.remark}</p>` : ''}
+    <h2>현장 준수항목 ${okTag(r)}</h2><ul class="cl">${cl}</ul>
+    <h2 style="margin-top:14px">현장사진 · TBM일지</h2>
+    <div class="photos">${r.photos.map(f => `<div class="ph">${f}</div>`).join('')}
+      <div class="ph" style="${r.tbmFile ? '' : 'color:var(--bad)'}">${r.tbmFile || 'TBM일지 없음'}</div></div>
+    <h2 style="margin-top:14px">확인</h2>
+    <label class="chk"><input type="checkbox" ${r.confirmed.supervisor ? 'checked' : ''} onchange="confirmR('${r.id}','supervisor',this.checked)"><span>감리 확인</span></label>
+    <label class="chk"><input type="checkbox" ${r.confirmed.kec ? 'checked' : ''} onchange="confirmR('${r.id}','kec',this.checked)"><span>도공감독 확인</span></label>`;
+  $('#modal').classList.add('on');
+}
+window.closeModal = () => $('#modal').classList.remove('on');
+$('#modal').onclick = e => { if (e.target.id === 'modal') closeModal(); };
+window.confirmR = (id, who, v) => { D.reports.find(r => r.id === id).confirmed[who] = v; save(); render(); };
+
+// ② 작업 보고 입력
+document.querySelectorAll('.seg button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('.seg button').forEach(x => x.classList.remove('on')); b.classList.add('on');
+  $('#startForm').style.display = b.dataset.mode === 'start' ? '' : 'none';
+  $('#endForm').style.display = b.dataset.mode === 'end' ? '' : 'none';
+  fillEnd();
+});
+function fillStart() {
+  $('#fProj').innerHTML = D.projects.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+  onProj();
+}
+function onProj() {
+  const p = proj($('#fProj').value);
+  $('#fSite').innerHTML = p.sites.filter(s => !s.done).map(s => `<option value="${s.id}">${s.name} (${s.office || p.office})</option>`).join('');
+  $('#fContractor').value = p.contractor;
+}
+$('#fProj').onchange = onProj;
+function renderChecks() {
+  const lane = $('#fLane').checked, night = $('#fShift').value === '야간', st = $('#fStart').value;
+  const prev = {}; document.querySelectorAll('#fChecks input').forEach(i => prev[i.id] = i.checked);
+  $('#fChecks').innerHTML = D.checklistItems.map(c => {
+    if (c.key === 'timeOk') {
+      const ok = st ? timeOk($('#fShift').value, st) : null;
+      return `<div class="chk"><span>${ok === null ? '⏱' : ok ? '<span class="tag ok">✓</span>' : '<span class="tag bad">✗</span>'}</span><span>${c.label}<br><span class="muted">시작 시간으로 자동 판정</span></span></div>`;
+    }
+    const na = (c.key === 'flagger' && !lane) || (c.key === 'nightGear' && !night);
+    return `<label class="chk ${na ? 'na' : ''}"><input type="checkbox" id="c_${c.key}" ${na ? 'disabled' : ''} ${prev['c_' + c.key] && !na ? 'checked' : ''}><span>${c.label}${na ? '<br><span class="muted">해당 없음</span>' : ''}</span></label>`;
+  }).join('');
+}
+['#fLane','#fShift','#fStart'].forEach(s => $(s).addEventListener('input', renderChecks));
+
+$('#startForm').onsubmit = e => {
+  e.preventDefault();
+  if (!$('#fSite').value) return toast('이 사업은 남은 작업 개소가 없습니다');
+  const shift = $('#fShift').value, lane = $('#fLane').checked;
+  const files = [...$('#fPhoto').files].map(f => f.name);
+  const tbm = $('#fTbm').files[0]?.name || null;
+  const id = 'R' + String(D.reports.length + 1).padStart(2, '0');
+  D.reports.push({
+    id, projectId: $('#fProj').value, siteId: $('#fSite').value, date: D.today, shift,
+    content: $('#fContent').value, laneClosure: lane, start: $('#fStart').value, end: null, status: '진행 중',
+    contractor: $('#fContractor').value, manager: $('#fManager').value,
+    photos: files.length ? files : [id + '_start.jpg'], tbmFile: tbm,
+    checklist: {
+      tbm: $('#c_tbm').checked && !!tbm, signs: $('#c_signs').checked,
+      flagger: lane ? $('#c_flagger').checked : null,
+      timeOk: timeOk(shift, $('#fStart').value),
+      nightGear: shift === '야간' ? $('#c_nightGear').checked : null
+    },
+    completedSite: false, confirmed: { supervisor: false, kec: false }
+  });
+  save(); e.target.reset(); fillStart(); renderChecks(); render();
+  toast('시작 보고를 올렸습니다');
+};
+function fillEnd() {
+  const run = D.reports.filter(r => r.status === '진행 중');
+  $('#eWork').innerHTML = run.length ? run.map(r => `<option value="${r.id}">${fmtDate(r.date)} ${proj(r.projectId).name} · ${site(r.siteId).name} (${r.start}~)</option>`).join('')
+    : '<option value="">진행 중인 작업이 없습니다</option>';
+}
+$('#eEnd').oninput = () => {
+  const r = D.reports.find(x => x.id === $('#eWork').value); if (!r || !$('#eEnd').value) return;
+  const ok = timeOk(r.shift, r.start, $('#eEnd').value);
+  $('#eTimeMsg').innerHTML = ok ? '허용 시간 안에 종료합니다.' : '<span style="color:var(--bad)">허용 시간을 넘겨 미준수로 표시됩니다.</span>';
+};
+$('#endForm').onsubmit = e => {
+  e.preventDefault();
+  const r = D.reports.find(x => x.id === $('#eWork').value); if (!r) return;
+  r.end = $('#eEnd').value; r.status = '종료';
+  r.checklist.timeOk = timeOk(r.shift, r.start, r.end);
+  r.photos.push(...([...$('#ePhoto').files].map(f => f.name)));
+  if ($('#eDone').checked) { r.completedSite = true; const s = site(r.siteId); s.done = true; s.completedDate = r.date; }
+  save(); e.target.reset(); $('#eTimeMsg').textContent = ''; fillStart(); render();
+  toast('종료 보고를 올렸습니다');
+};
+
+// ④ 사업 관리
+let editing = null; // 수정 중인 사업 id
+function renderProjects() {
+  $('#pBody').innerHTML = D.projects.map(p => `<tr data-pid="${p.id}" style="${p.id === editing ? 'background:var(--brand-soft)' : ''}">
+    <td>${p.name}<br><span class="otag">${p.office}</span><span class="muted">${p.sites.length}개소</span></td>
+    <td class="hide-m">${p.contractor}</td>
+    <td class="hide-m">${fmtDate(p.period.start)} ~<br>${fmtDate(p.period.end)}</td>
+    <td>${p.contactName}<br><span class="muted">${p.contactPhone}</span></td>
+    <td class="pct">${pct(p)}%</td>
+  </tr>`).join('');
+}
+$('#pBody').onclick = e => {
+  const tr = e.target.closest('[data-pid]'); if (!tr) return;
+  const p = proj(tr.dataset.pid); editing = p.id;
+  $('#pfName').value = p.name; $('#pfCon').value = p.contractor;
+  $('#pfStart').value = p.period.start; $('#pfEnd').value = p.period.end;
+  $('#pfMgr').value = p.contactName; $('#pfTel').value = p.contactPhone;
+  $('#pfOffice').value = p.office || '';
+  $('#pfSites').value = p.sites.map(s => s.office ? `${s.name} / ${s.office}` : s.name).join('\n');
+  $('#pfTitle').textContent = '사업 수정'; $('#pfBtn').textContent = '수정 저장'; $('#pfNew').style.display = '';
+  renderProjects(); $('#projForm').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+};
+function resetProjForm() {
+  editing = null; $('#projForm').reset();
+  $('#pfTitle').textContent = '새 사업 등록'; $('#pfBtn').textContent = '사업 등록'; $('#pfNew').style.display = 'none';
+  renderProjects();
+}
+$('#pfNew').onclick = e => { e.preventDefault(); resetProjForm(); };
+$('#projForm').onsubmit = e => {
+  e.preventDefault();
+  if ($('#pfEnd').value < $('#pfStart').value) return toast('계약 종료일이 시작일보다 빠릅니다');
+  // 한 줄 = "개소명" 또는 "개소명 / 영업소"
+  const lines = {};
+  $('#pfSites').value.split('\n').forEach(l => {
+    const [nm, of] = l.split('/').map(x => x.trim());
+    if (nm && !(nm in lines)) lines[nm] = of || null;
+  });
+  const names = Object.keys(lines);
+  const p = editing ? proj(editing) : { id: 'P' + (Math.max(0, ...D.projects.map(x => +x.id.slice(1))) + 1), sites: [] };
+  // 작업 보고가 있는 개소는 지울 수 없게 막음
+  const removed = p.sites.filter(s => !names.includes(s.name) && D.reports.some(r => r.siteId === s.id));
+  if (removed.length) return toast(`작업 보고가 있는 개소는 뺄 수 없습니다: ${removed.map(s => s.name).join(', ')}`);
+  let n = Math.max(0, ...p.sites.map(s => +s.id.split('-S')[1] || 0));
+  const office = $('#pfOffice').value.trim();
+  p.sites = names.map(nm => {
+    const s = p.sites.find(x => x.name === nm) || { id: `${p.id}-S${++n}`, name: nm, done: false, completedDate: null };
+    if (lines[nm] && lines[nm] !== office) s.office = lines[nm]; else delete s.office;
+    return s;
+  });
+  Object.assign(p, {
+    name: $('#pfName').value.trim(), contractor: $('#pfCon').value.trim(), office,
+    contactName: $('#pfMgr').value.trim(), contactPhone: $('#pfTel').value.trim(),
+    period: { start: $('#pfStart').value, end: $('#pfEnd').value }
+  });
+  if (!editing) D.projects.push(p);
+  save(); toast(editing ? '사업을 수정했습니다' : '사업을 등록했습니다');
+  resetProjForm(); fillFilters(); fillStart(); render();
+};
+
+function toast(m) { const t = $('#toast'); t.textContent = m; t.style.display = 'block'; setTimeout(() => t.style.display = 'none', 1800); }
+function render() { renderDash(); renderHistory(); fillEnd(); renderProjects(); }
+
+fillFilters(); fillStart(); renderChecks(); render();
+</script>
+</body>
+</html>

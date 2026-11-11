@@ -1,0 +1,597 @@
+{
+  "_note": "화면 개발용 가상 데이터. 영업소·TG명은 경부선 실제 명칭을 썼으나, 업체명·담당자·연락처·개소 위치(km)는 모두 가상이며 실제 정보로 바꿔야 함. 기준일 2026-11-11.",
+  "today": "2026-11-11",
+  "checklistItems": [
+    {
+      "key": "tbm",
+      "label": "TBM 실시 및 TBM일지 첨부",
+      "appliesTo": "전체"
+    },
+    {
+      "key": "signs",
+      "label": "작업장 표지 설치(주의 → 완화 → 작업 구간)",
+      "appliesTo": "전체"
+    },
+    {
+      "key": "flagger",
+      "label": "신호수 2명 이상 배치",
+      "appliesTo": "차로 차단 작업"
+    },
+    {
+      "key": "timeOk",
+      "label": "허용 시간 내 작업(주간 09:00~17:00 / 야간 22:00~06:00)",
+      "appliesTo": "전체(자동 판정)"
+    },
+    {
+      "key": "nightGear",
+      "label": "경광등·화살표 차량, 반사 조끼",
+      "appliesTo": "야간 작업"
+    }
+  ],
+  "projects": [
+    {
+      "id": "P1",
+      "name": "수원신갈TG ETC 차로설비 교체",
+      "office": "수원신갈영업소",
+      "category": "교체",
+      "equipment": "ETC",
+      "contractor": "(주)한빛ITS",
+      "contactName": "현장대리인 김○○",
+      "contactPhone": "010-0000-0001",
+      "supervisorFirm": "(주)세움감리",
+      "kecManager": "도공감독 A",
+      "period": {
+        "start": "2026-10-13",
+        "end": "2026-11-30"
+      },
+      "sites": [
+        {
+          "id": "P1-L1",
+          "name": "입구 1번 차로",
+          "done": true,
+          "completedDate": "2026-10-20"
+        },
+        {
+          "id": "P1-L2",
+          "name": "입구 2번 차로",
+          "done": true,
+          "completedDate": "2026-10-27"
+        },
+        {
+          "id": "P1-L3",
+          "name": "출구 3번 차로",
+          "done": true,
+          "completedDate": "2026-11-03"
+        },
+        {
+          "id": "P1-L4",
+          "name": "출구 4번 차로",
+          "done": true,
+          "completedDate": "2026-11-05"
+        },
+        {
+          "id": "P1-L5",
+          "name": "출구 5번 차로",
+          "done": false,
+          "completedDate": null
+        },
+        {
+          "id": "P1-L6",
+          "name": "출구 6번 차로",
+          "done": false,
+          "completedDate": null
+        }
+      ]
+    },
+    {
+      "id": "P2",
+      "name": "경부선 제한차량 단속설비 신설",
+      "office": "오산영업소",
+      "category": "신설",
+      "equipment": "제한차량 단속설비",
+      "contractor": "(주)미래시스템",
+      "contactName": "현장대리인 이○○",
+      "contactPhone": "010-0000-0002",
+      "supervisorFirm": "(주)세움감리",
+      "kecManager": "도공감독 B",
+      "period": {
+        "start": "2026-10-27",
+        "end": "2026-12-18"
+      },
+      "sites": [
+        {
+          "id": "P2-S1",
+          "name": "상행 12.4k",
+          "done": true,
+          "completedDate": "2026-11-04"
+        },
+        {
+          "id": "P2-S2",
+          "name": "하행 15.8k",
+          "done": true,
+          "completedDate": "2026-11-06"
+        },
+        {
+          "id": "P2-S3",
+          "name": "상행 21.0k",
+          "done": false,
+          "completedDate": null,
+          "office": "안성영업소"
+        },
+        {
+          "id": "P2-S4",
+          "name": "하행 26.3k",
+          "done": false,
+          "completedDate": null,
+          "office": "안성영업소"
+        },
+        {
+          "id": "P2-S5",
+          "name": "상행 30.7k",
+          "done": false,
+          "completedDate": null,
+          "office": "안성영업소"
+        }
+      ]
+    },
+    {
+      "id": "P3",
+      "name": "기흥TG 하이패스 차로 교체",
+      "office": "기흥영업소",
+      "category": "교체",
+      "equipment": "ETC",
+      "contractor": "(주)대한통신",
+      "contactName": "현장대리인 박○○",
+      "contactPhone": "010-0000-0003",
+      "supervisorFirm": "(주)바른감리",
+      "kecManager": "도공감독 A",
+      "period": {
+        "start": "2026-11-02",
+        "end": "2026-12-11"
+      },
+      "sites": [
+        {
+          "id": "P3-H1",
+          "name": "입구 1번 차로",
+          "done": true,
+          "completedDate": "2026-11-05"
+        },
+        {
+          "id": "P3-H2",
+          "name": "입구 2번 차로",
+          "done": false,
+          "completedDate": null
+        },
+        {
+          "id": "P3-H3",
+          "name": "출구 1번 차로",
+          "done": false,
+          "completedDate": null
+        },
+        {
+          "id": "P3-H4",
+          "name": "출구 2번 차로",
+          "done": false,
+          "completedDate": null
+        }
+      ]
+    },
+    {
+      "id": "P4",
+      "name": "경부선 제한차량 단속설비 교체",
+      "office": "서울영업소",
+      "category": "교체",
+      "equipment": "제한차량 단속설비",
+      "contractor": "(주)한빛ITS",
+      "contactName": "현장대리인 최○○",
+      "contactPhone": "010-0000-0004",
+      "supervisorFirm": "(주)바른감리",
+      "kecManager": "도공감독 B",
+      "period": {
+        "start": "2026-11-06",
+        "end": "2026-12-24"
+      },
+      "sites": [
+        {
+          "id": "P4-Y1",
+          "name": "상행 8.2k",
+          "done": false,
+          "completedDate": null
+        },
+        {
+          "id": "P4-Y2",
+          "name": "하행 11.5k",
+          "done": false,
+          "completedDate": null
+        },
+        {
+          "id": "P4-Y3",
+          "name": "상행 19.9k",
+          "done": false,
+          "completedDate": null
+        },
+        {
+          "id": "P4-Y4",
+          "name": "하행 23.6k",
+          "done": false,
+          "completedDate": null
+        }
+      ]
+    }
+  ],
+  "reports": [
+    {
+      "id": "R01",
+      "projectId": "P1",
+      "siteId": "P1-L3",
+      "date": "2026-11-03",
+      "shift": "주간",
+      "content": "차로제어기·안테나 철거 후 신규 설비 설치 및 시험",
+      "laneClosure": true,
+      "start": "09:10",
+      "end": "16:30",
+      "status": "종료",
+      "contractor": "(주)한빛ITS",
+      "manager": "현장담당 김○○",
+      "photos": [
+        "R01_start.jpg",
+        "R01_end.jpg"
+      ],
+      "tbmFile": "R01_TBM.pdf",
+      "checklist": {
+        "tbm": true,
+        "signs": true,
+        "flagger": true,
+        "timeOk": true,
+        "nightGear": null
+      },
+      "completedSite": true,
+      "confirmed": {
+        "supervisor": true,
+        "kec": true
+      }
+    },
+    {
+      "id": "R02",
+      "projectId": "P2",
+      "siteId": "P2-S1",
+      "date": "2026-11-04",
+      "shift": "야간",
+      "content": "축중기 센서 매설 및 단속 카메라 설치",
+      "laneClosure": true,
+      "start": "22:10",
+      "end": "05:30",
+      "status": "종료",
+      "contractor": "(주)미래시스템",
+      "manager": "현장담당 이○○",
+      "photos": [
+        "R02_start.jpg",
+        "R02_end.jpg"
+      ],
+      "tbmFile": "R02_TBM.pdf",
+      "checklist": {
+        "tbm": true,
+        "signs": true,
+        "flagger": true,
+        "timeOk": true,
+        "nightGear": true
+      },
+      "completedSite": true,
+      "confirmed": {
+        "supervisor": true,
+        "kec": true
+      }
+    },
+    {
+      "id": "R03",
+      "projectId": "P1",
+      "siteId": "P1-L4",
+      "date": "2026-11-05",
+      "shift": "주간",
+      "content": "차로제어기·안테나 교체 및 통신 시험",
+      "laneClosure": true,
+      "start": "09:00",
+      "end": "16:50",
+      "status": "종료",
+      "contractor": "(주)한빛ITS",
+      "manager": "현장담당 김○○",
+      "photos": [
+        "R03_start.jpg",
+        "R03_end.jpg"
+      ],
+      "tbmFile": "R03_TBM.pdf",
+      "checklist": {
+        "tbm": true,
+        "signs": true,
+        "flagger": true,
+        "timeOk": true,
+        "nightGear": null
+      },
+      "completedSite": true,
+      "confirmed": {
+        "supervisor": true,
+        "kec": true
+      }
+    },
+    {
+      "id": "R04",
+      "projectId": "P3",
+      "siteId": "P3-H1",
+      "date": "2026-11-05",
+      "shift": "주간",
+      "content": "하이패스 안테나·차로제어기 교체",
+      "laneClosure": true,
+      "start": "09:30",
+      "end": "17:40",
+      "status": "종료",
+      "contractor": "(주)대한통신",
+      "manager": "현장담당 박○○",
+      "photos": [
+        "R04_start.jpg",
+        "R04_end.jpg"
+      ],
+      "tbmFile": "R04_TBM.pdf",
+      "checklist": {
+        "tbm": true,
+        "signs": true,
+        "flagger": true,
+        "timeOk": false,
+        "nightGear": null
+      },
+      "completedSite": true,
+      "confirmed": {
+        "supervisor": true,
+        "kec": true
+      },
+      "remark": "주간 허용시간(17:00) 40분 초과"
+    },
+    {
+      "id": "R05",
+      "projectId": "P2",
+      "siteId": "P2-S2",
+      "date": "2026-11-06",
+      "shift": "야간",
+      "content": "축중기 센서 매설 및 단속 카메라 설치",
+      "laneClosure": true,
+      "start": "22:00",
+      "end": "05:40",
+      "status": "종료",
+      "contractor": "(주)미래시스템",
+      "manager": "현장담당 이○○",
+      "photos": [
+        "R05_start.jpg",
+        "R05_end.jpg"
+      ],
+      "tbmFile": "R05_TBM.pdf",
+      "checklist": {
+        "tbm": true,
+        "signs": true,
+        "flagger": false,
+        "timeOk": true,
+        "nightGear": true
+      },
+      "completedSite": true,
+      "confirmed": {
+        "supervisor": true,
+        "kec": false
+      },
+      "remark": "신호수 1명만 배치"
+    },
+    {
+      "id": "R06",
+      "projectId": "P4",
+      "siteId": "P4-Y1",
+      "date": "2026-11-06",
+      "shift": "주간",
+      "content": "자재 반입 및 기존 설비 상태 점검(갓길 작업)",
+      "laneClosure": false,
+      "start": "09:00",
+      "end": "15:00",
+      "status": "종료",
+      "contractor": "(주)한빛ITS",
+      "manager": "현장담당 최○○",
+      "photos": [
+        "R06_start.jpg",
+        "R06_end.jpg"
+      ],
+      "tbmFile": "R06_TBM.pdf",
+      "checklist": {
+        "tbm": true,
+        "signs": true,
+        "flagger": null,
+        "timeOk": true,
+        "nightGear": null
+      },
+      "completedSite": false,
+      "confirmed": {
+        "supervisor": true,
+        "kec": true
+      }
+    },
+    {
+      "id": "R07",
+      "projectId": "P1",
+      "siteId": "P1-L5",
+      "date": "2026-11-09",
+      "shift": "주간",
+      "content": "기존 차로제어기 철거 및 배선 정리",
+      "laneClosure": true,
+      "start": "09:00",
+      "end": "16:40",
+      "status": "종료",
+      "contractor": "(주)한빛ITS",
+      "manager": "현장담당 김○○",
+      "photos": [
+        "R07_start.jpg",
+        "R07_end.jpg"
+      ],
+      "tbmFile": "R07_TBM.pdf",
+      "checklist": {
+        "tbm": true,
+        "signs": true,
+        "flagger": true,
+        "timeOk": true,
+        "nightGear": null
+      },
+      "completedSite": false,
+      "confirmed": {
+        "supervisor": true,
+        "kec": true
+      }
+    },
+    {
+      "id": "R08",
+      "projectId": "P2",
+      "siteId": "P2-S3",
+      "date": "2026-11-10",
+      "shift": "야간",
+      "content": "축중기 센서 매설(1단계)",
+      "laneClosure": true,
+      "start": "22:00",
+      "end": "05:50",
+      "status": "종료",
+      "contractor": "(주)미래시스템",
+      "manager": "현장담당 정○○",
+      "photos": [
+        "R08_start.jpg",
+        "R08_end.jpg"
+      ],
+      "tbmFile": null,
+      "checklist": {
+        "tbm": false,
+        "signs": true,
+        "flagger": true,
+        "timeOk": true,
+        "nightGear": true
+      },
+      "completedSite": false,
+      "confirmed": {
+        "supervisor": false,
+        "kec": false
+      },
+      "remark": "TBM일지 미첨부"
+    },
+    {
+      "id": "R09",
+      "projectId": "P3",
+      "siteId": "P3-H2",
+      "date": "2026-11-10",
+      "shift": "주간",
+      "content": "기존 안테나 철거 및 지지대 보강",
+      "laneClosure": true,
+      "start": "09:20",
+      "end": "16:30",
+      "status": "종료",
+      "contractor": "(주)대한통신",
+      "manager": "현장담당 박○○",
+      "photos": [
+        "R09_start.jpg",
+        "R09_end.jpg"
+      ],
+      "tbmFile": "R09_TBM.pdf",
+      "checklist": {
+        "tbm": true,
+        "signs": true,
+        "flagger": true,
+        "timeOk": true,
+        "nightGear": null
+      },
+      "completedSite": false,
+      "confirmed": {
+        "supervisor": true,
+        "kec": false
+      }
+    },
+    {
+      "id": "R10",
+      "projectId": "P1",
+      "siteId": "P1-L5",
+      "date": "2026-11-11",
+      "shift": "주간",
+      "content": "신규 차로제어기·안테나 설치",
+      "laneClosure": true,
+      "start": "09:05",
+      "end": null,
+      "status": "진행 중",
+      "contractor": "(주)한빛ITS",
+      "manager": "현장담당 김○○",
+      "photos": [
+        "R10_start.jpg"
+      ],
+      "tbmFile": "R10_TBM.pdf",
+      "checklist": {
+        "tbm": true,
+        "signs": true,
+        "flagger": true,
+        "timeOk": true,
+        "nightGear": null
+      },
+      "completedSite": false,
+      "confirmed": {
+        "supervisor": false,
+        "kec": false
+      }
+    },
+    {
+      "id": "R11",
+      "projectId": "P4",
+      "siteId": "P4-Y1",
+      "date": "2026-11-11",
+      "shift": "주간",
+      "content": "기존 단속 카메라 철거",
+      "laneClosure": true,
+      "start": "09:30",
+      "end": null,
+      "status": "진행 중",
+      "contractor": "(주)한빛ITS",
+      "manager": "현장담당 최○○",
+      "photos": [
+        "R11_start.jpg"
+      ],
+      "tbmFile": "R11_TBM.pdf",
+      "checklist": {
+        "tbm": true,
+        "signs": true,
+        "flagger": false,
+        "timeOk": true,
+        "nightGear": null
+      },
+      "completedSite": false,
+      "confirmed": {
+        "supervisor": false,
+        "kec": false
+      },
+      "remark": "차로 차단 작업인데 신호수 체크 누락"
+    },
+    {
+      "id": "R12",
+      "projectId": "P3",
+      "siteId": "P3-H2",
+      "date": "2026-11-11",
+      "shift": "주간",
+      "content": "신규 하이패스 안테나 설치 및 시험",
+      "laneClosure": true,
+      "start": "09:00",
+      "end": null,
+      "status": "진행 중",
+      "contractor": "(주)대한통신",
+      "manager": "현장담당 박○○",
+      "photos": [
+        "R12_start.jpg"
+      ],
+      "tbmFile": "R12_TBM.pdf",
+      "checklist": {
+        "tbm": true,
+        "signs": true,
+        "flagger": true,
+        "timeOk": true,
+        "nightGear": null
+      },
+      "completedSite": false,
+      "confirmed": {
+        "supervisor": false,
+        "kec": false
+      }
+    }
+  ]
+}
